@@ -1,15 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import { GlobeIcon } from 'lucide-react';
+import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-white border-t border-neutral-200 pt-8 pb-6">
+    <footer className="pt-8 pb-6 bg-white border-t border-neutral-200">
       <div className="container-custom">
         {/* Main Footer Links */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="font-bold text-neutral-800 mb-4">Support</h3>
+            <h3 className="mb-4 font-bold text-neutral-800">Support</h3>
             <ul className="space-y-3">
               <li><a href="#" className="text-neutral-600 hover:underline">Help Center</a></li>
               <li><a href="#" className="text-neutral-600 hover:underline">AirCover</a></li>
@@ -21,9 +20,9 @@ const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="font-bold text-neutral-800 mb-4">Hosting</h3>
+            <h3 className="mb-4 font-bold text-neutral-800">Hosting</h3>
             <ul className="space-y-3">
-              <li><a href="#" className="text-neutral-600 hover:underline">Airbnb your home</a></li>
+              <li><a href="#" className="text-neutral-600 hover:underline">book & rent your home</a></li>
               <li><a href="#" className="text-neutral-600 hover:underline">AirCover for Hosts</a></li>
               <li><a href="#" className="text-neutral-600 hover:underline">Hosting resources</a></li>
               <li><a href="#" className="text-neutral-600 hover:underline">Community forum</a></li>
@@ -32,7 +31,7 @@ const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="font-bold text-neutral-800 mb-4">Airbnb</h3>
+            <h3 className="mb-4 font-bold text-neutral-800">book & rent</h3>
             <ul className="space-y-3">
               <li><a href="#" className="text-neutral-600 hover:underline">Newsroom</a></li>
               <li><a href="#" className="text-neutral-600 hover:underline">New features</a></li>
@@ -43,7 +42,7 @@ const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="font-bold text-neutral-800 mb-4">Policies</h3>
+            <h3 className="mb-4 font-bold text-neutral-800">Policies</h3>
             <ul className="space-y-3">
               <li><a href="#" className="text-neutral-600 hover:underline">Privacy</a></li>
               <li><a href="#" className="text-neutral-600 hover:underline">Terms</a></li>
@@ -54,10 +53,10 @@ const Footer: React.FC = () => {
         </div>
         
         {/* Bottom Bar */}
-        <div className="border-t border-neutral-200 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-            <div className="text-neutral-600 text-sm">
-              © 2025 Airbnb Clone, Inc.
+        <div className="flex flex-col items-center justify-between pt-6 mt-8 border-t border-neutral-200 md:flex-row">
+          <div className="flex flex-col items-center space-y-2 md:flex-row md:space-y-0 md:space-x-4">
+            <div className="text-sm text-neutral-600">
+              © 2025 book & rent, Inc.
             </div>
             <div className="flex space-x-4 text-sm">
               <a href="#" className="text-neutral-600 hover:underline">Privacy</a>
@@ -68,12 +67,12 @@ const Footer: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex items-center space-x-6 mt-4 md:mt-0">
-            <div className="flex items-center text-neutral-800 hover:underline cursor-pointer">
+          <div className="flex items-center mt-4 space-x-6 md:mt-0">
+            <div className="flex items-center cursor-pointer text-neutral-800 hover:underline">
               <GlobeIcon size={16} className="mr-1" />
               <span className="text-sm font-medium">English (US)</span>
             </div>
-            <div className="text-neutral-800 hover:underline cursor-pointer">
+            <div className="cursor-pointer text-neutral-800 hover:underline">
               <span className="text-sm font-medium">$ USD</span>
             </div>
             <div className="flex space-x-4">
