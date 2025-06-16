@@ -16,12 +16,58 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/airbnbdata', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect('mongodb://localhost:27017/airbnbdata', { serverSelectionTimeoutMS: 10000 })
 .then(() => console.log('MongoDB Connected to airbnbdata'))
 .catch(err => console.log('MongoDB Connection Error:', err));
+
+// User Schema
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true,
+    match: [/.+\@.+\..+/, 'Please fill a valid email address']
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6 // Example: require a minimum password length
+  },
+  isHost: { // Assuming users can also be hosts
+    type: Boolean,
+    default: false
+  }
+}, {
+  timestamps: true // Adds createdAt and updatedAt timestamps
+});
+
+// Pre-save hook to hash password
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Method to compare password
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+const User = mongoose.model('User', userSchema);
 
 // Define Schema
 const dataSchema = new mongoose.Schema({
@@ -66,42 +112,88 @@ const dataSchema = new mongoose.Schema({
 // Create Model
 const Data = mongoose.model('data', dataSchema);
 
+import { protect } from './middleware/authMiddleware.js';
+
 // Routes
 app.get('/', (req, res) => {
   res.send('Airbnb Clone API is running');
 });
 
-// User Routes
-app.post('/api/users/register', (req, res) => {
-  // Implementation for user registration
-  // For the demo, we'll just send a successful response
-  res.status(201).json({
-    success: true,
-    message: 'User registered successfully',
-    token: 'demo-jwt-token',
-    user: {
-      _id: '123456',
-      name: req.body.name,
-      email: req.body.email,
-      isHost: false
-    }
+const generateToken = (user) => {
+  return jwt.sign({ id: user._id, email: user.email, isHost: user.isHost }, process.env.JWT_SECRET, {
+    expiresIn: "30d", // Example: token expires in 30 days
   });
+};
+
+// User Routes
+app.post('/api/users/register', async (req, res) => {
+  const { name, email, password, isHost } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ success: false, message: 'User already exists' });
+    }
+
+    user = new User({
+      name,
+      email,
+      password,
+      isHost: isHost || false // Default isHost to false if not provided
+    });
+
+    await user.save();
+
+    const token = generateToken(user);
+
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully',
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isHost: user.isHost
+      }
+    });
+  } catch (error) {
+    console.error('Register Error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error during registration', error: error.message });
+  }
 });
 
-app.post('/api/users/login', (req, res) => {
-  // Implementation for user login
-  // For the demo, we'll just send a successful response
-  res.status(200).json({
-    success: true,
-    message: 'User logged in successfully',
-    token: 'demo-jwt-token',
-    user: {
-      _id: '123456',
-      name: 'Demo User',
-      email: req.body.email,
-      isHost: false
+app.post('/api/users/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
-  });
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    const token = generateToken(user);
+
+    res.status(200).json({
+      success: true,
+      message: 'User logged in successfully',
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isHost: user.isHost
+      }
+    });
+  } catch (error) {
+    console.error('Login Error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error during login', error: error.message });
+  }
 });
 
 // Property Routes
@@ -127,7 +219,7 @@ app.get('/api/properties/:id', async (req, res) => {
 });
 
 // Add new property
-app.post('/api/properties', async (req, res) => {
+app.post('/api/properties', protect, async (req, res) => {
   try {
     const newProperty = new Data(req.body);
     const savedProperty = await newProperty.save();
@@ -138,7 +230,7 @@ app.post('/api/properties', async (req, res) => {
 });
 
 // Update property
-app.put('/api/properties/:id', async (req, res) => {
+app.put('/api/properties/:id', protect, async (req, res) => {
   try {
     const updatedProperty = await Data.findByIdAndUpdate(
       req.params.id,
@@ -155,7 +247,7 @@ app.put('/api/properties/:id', async (req, res) => {
 });
 
 // Delete property
-app.delete('/api/properties/:id', async (req, res) => {
+app.delete('/api/properties/:id', protect, async (req, res) => {
   try {
     const deletedProperty = await Data.findByIdAndDelete(req.params.id);
     if (!deletedProperty) {
@@ -168,7 +260,7 @@ app.delete('/api/properties/:id', async (req, res) => {
 });
 
 // Booking Routes
-app.post('/api/bookings', (req, res) => {
+app.post('/api/bookings', protect, (req, res) => {
   // Implementation for creating a booking
   // For the demo, we'll just send a successful response
   res.status(201).json({

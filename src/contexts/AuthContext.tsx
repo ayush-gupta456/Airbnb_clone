@@ -34,89 +34,94 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if user is logged in on app load
-    const checkLoggedIn = async () => {
+    const initializeAuth = async () => {
+      setLoading(true);
       const token = localStorage.getItem('token');
-      
-      if (token) {
+      const userDataString = localStorage.getItem('user');
+
+      if (token && userDataString) {
         try {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          };
+          // Set token for axios globally if found
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
-          // For this demo, we're simulating authentication with local storage
-          // In a real app, you would validate the token with your backend
-          const userData = localStorage.getItem('user');
-          if (userData) {
-            setUser(JSON.parse(userData));
-          }
-          
+          // Here you might want to validate the token with the backend
+          // For example: const response = await axios.get(`http://localhost:5000/api/users/me`);
+          // setUser(response.data.user);
+          // For now, we'll trust the localStorage if a token exists from a previous login/register.
+          // A dedicated validation endpoint would be more secure.
+          const parsedUser = JSON.parse(userDataString);
+          setUser(parsedUser);
+
         } catch (err) {
+          // If token is invalid (e.g., validation call fails or JSON parse fails)
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          setError('Authentication failed. Please log in again.');
+          delete axios.defaults.headers.common['Authorization'];
+          setUser(null);
+          // setError('Session expired or invalid. Please log in again.'); // Optional: set error
         }
       }
-      
       setLoading(false);
     };
-    
-    checkLoggedIn();
+    initializeAuth();
   }, []);
 
   const login = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      
-      // This would normally call your backend API
-      // const res = await axios.post('/api/users/login', { email, password });
-      
-      // For demo purposes, we'll simulate a successful login
-      const mockUser = {
-        _id: '123456',
-        name: 'Demo User',
-        email: email,
-        isHost: false
-      };
-      
-      // Store token and user info
-      localStorage.setItem('token', 'mock-jwt-token');
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      
-      setUser(mockUser);
-      setError(null);
-    } catch (err) {
-      setError('Invalid credentials');
+      const res = await axios.post(`http://localhost:5000/api/users/login`, { email, password });
+      if (res.data && res.data.success) {
+        const { token, user: userData } = res.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+        // Set token for subsequent axios requests (globally or for an instance)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      } else {
+        setError(res.data.message || 'Login failed. Please try again.');
+      }
+    } catch (err: any) {
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.message || 'An error occurred during login.');
+      } else {
+        setError('An unexpected error occurred during login.');
+      }
+      // Clear any potentially stored invalid token/user from previous attempts or mock data
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
+
     } finally {
       setLoading(false);
     }
   };
 
   const register = async (name: string, email: string, password: string) => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      
-      // This would normally call your backend API
-      // const res = await axios.post('/api/users/register', { name, email, password });
-      
-      // For demo purposes, we'll simulate a successful registration
-      const mockUser = {
-        _id: '123456',
-        name: name,
-        email: email,
-        isHost: false
-      };
-      
-      // Store token and user info
-      localStorage.setItem('token', 'mock-jwt-token');
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      
-      setUser(mockUser);
-      setError(null);
-    } catch (err) {
-      setError('Registration failed');
+      const res = await axios.post(`http://localhost:5000/api/users/register`, { name, email, password });
+      if (res.data && res.data.success) {
+        const { token, user: userData } = res.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+        // Set token for subsequent axios requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      } else {
+        setError(res.data.message || 'Registration failed. Please try again.');
+      }
+    } catch (err: any) {
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.message || 'An error occurred during registration.');
+      } else {
+        setError('An unexpected error occurred during registration.');
+      }
+      // Clear any potentially stored invalid token/user
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
     } finally {
       setLoading(false);
     }
@@ -125,6 +130,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    delete axios.defaults.headers.common['Authorization'];
     setUser(null);
   };
 
