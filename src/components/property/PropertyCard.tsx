@@ -14,7 +14,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   return (
     <div className="card group">
       <Link to={`/properties/${property._id}`} className="block">
-        {/* Image Container with Like Button */}
         <div className="relative">
           <div className="aspect-[4/3] overflow-hidden rounded-t-xl">
             <img 
@@ -27,14 +26,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
             className="absolute top-3 right-3 p-1.5 bg-white bg-opacity-80 rounded-full hover:bg-opacity-100 transition-colors"
             onClick={(e) => {
               e.preventDefault();
-              // Add wishlist functionality
             }}
           >
             <Heart size={20} className="text-neutral-600" />
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-4">
           <div className="flex justify-between items-start">
             <h3 className="font-medium text-neutral-900 text-base">

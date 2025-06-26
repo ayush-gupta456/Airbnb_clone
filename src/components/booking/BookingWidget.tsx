@@ -24,21 +24,16 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Calculate number of nights
   const nights = checkIn && checkOut 
     ? Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)) 
     : 0;
   
-  // Calculate subtotal
   const subtotal = price * nights;
   
-  // Calculate cleaning fee
   const cleaningFee = price * 0.15;
   
-  // Calculate service fee
   const serviceFee = subtotal * 0.12;
   
-  // Calculate total
   const total = subtotal + cleaningFee + serviceFee;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,7 +51,6 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({
     try {
       setIsLoading(true);
       
-      // Simulate booking creation
       setTimeout(() => {
         alert('Booking created successfully!');
         navigate('/bookings');
@@ -149,7 +143,6 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({
         </button>
       </form>
       
-      {/* Price breakdown */}
       {nights > 0 && (
         <div className="mt-6 space-y-4">
           <div className="flex justify-between text-sm">

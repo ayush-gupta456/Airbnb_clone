@@ -11,7 +11,6 @@ const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Handle scroll effect for transparent/solid header
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -25,7 +24,6 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle click outside dropdown menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (showMenu && !(event.target as Element).closest('.user-menu')) {
@@ -37,7 +35,6 @@ const Header: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showMenu]);
 
-  // Close dropdown when changing routes
   useEffect(() => {
     setShowMenu(false);
   }, [location.pathname]);
@@ -55,7 +52,6 @@ const Header: React.FC = () => {
     >
       <div className="py-4 container-custom">
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <div className="mr-2 text-primary-500">
@@ -67,12 +63,10 @@ const Header: React.FC = () => {
             </Link>
           </div>
 
-          {/* Search Bar (shown on larger screens) */}
           <div className="justify-center flex-1 hidden md:flex">
             <SearchBar />
           </div>
 
-          {/* Right Side Navigation */}
           <div className="flex items-center space-x-4">
             <Link to="/properties" className="hidden px-4 py-2 transition rounded-full md:block hover:bg-neutral-100">
               <span className="text-sm font-medium">Explore</span>
@@ -83,7 +77,6 @@ const Header: React.FC = () => {
               <span className="text-sm">English (US)</span>
             </button>
 
-            {/* User Menu */}
             <div className="relative user-menu">
               <button 
                 className="flex items-center p-2 transition border rounded-full border-neutral-300 hover:shadow-md"
@@ -93,7 +86,6 @@ const Header: React.FC = () => {
                 <User size={16} className="text-neutral-600" />
               </button>
 
-              {/* Dropdown Menu */}
               {showMenu && (
                 <div className="absolute right-0 w-64 py-2 mt-2 bg-white rounded-xl shadow-card fade-in">
                   {!user ? (
@@ -150,7 +142,6 @@ const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Search Bar */}
         <div className="mt-4 md:hidden">
           <SearchBar />
         </div>

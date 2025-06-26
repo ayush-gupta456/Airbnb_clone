@@ -41,24 +41,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (token && userDataString) {
         try {
-          // Set token for axios globally if found
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
-          // Here you might want to validate the token with the backend
-          // For example: const response = await axios.get(`http://localhost:5000/api/users/me`);
-          // setUser(response.data.user);
-          // For now, we'll trust the localStorage if a token exists from a previous login/register.
-          // A dedicated validation endpoint would be more secure.
           const parsedUser = JSON.parse(userDataString);
           setUser(parsedUser);
 
         } catch (err) {
-          // If token is invalid (e.g., validation call fails or JSON parse fails)
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           delete axios.defaults.headers.common['Authorization'];
           setUser(null);
-          // setError('Session expired or invalid. Please log in again.'); // Optional: set error
         }
       }
       setLoading(false);
@@ -76,7 +68,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
-        // Set token for subsequent axios requests (globally or for an instance)
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       } else {
         setError(res.data.message || 'Login failed. Please try again.');
@@ -87,7 +78,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         setError('An unexpected error occurred during login.');
       }
-      // Clear any potentially stored invalid token/user from previous attempts or mock data
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       delete axios.defaults.headers.common['Authorization'];
@@ -107,7 +97,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
-        // Set token for subsequent axios requests
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       } else {
         setError(res.data.message || 'Registration failed. Please try again.');
@@ -118,7 +107,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         setError('An unexpected error occurred during registration.');
       }
-      // Clear any potentially stored invalid token/user
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       delete axios.defaults.headers.common['Authorization'];

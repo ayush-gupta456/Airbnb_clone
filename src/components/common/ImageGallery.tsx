@@ -30,7 +30,6 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, title }) => {
     setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
-  // Function to navigate with arrow keys
   React.useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (!showAllImages) return;
@@ -56,7 +55,6 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, title }) => {
     <>
       <div className="relative rounded-xl overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {/* Main large image */}
           <div className="md:col-span-1 aspect-w-4 aspect-h-3 md:row-span-2 h-72 md:h-full">
             <img
               src={images[0]}
@@ -66,7 +64,6 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, title }) => {
             />
           </div>
 
-          {/* Grid of smaller images (only for larger screens) */}
           <div className="hidden md:grid grid-cols-2 gap-2 h-72">
             {images.slice(1, 3).map((image, index) => (
               <div key={index} className="aspect-w-1 aspect-h-1 overflow-hidden">
@@ -107,10 +104,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, title }) => {
         </div>
       </div>
       
-      {/* Full-screen Image Gallery Modal */}
       {showAllImages && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col fade-in">
-          {/* Header with close button */}
           <div className="flex justify-between items-center p-4 text-white">
             <button
               onClick={handleCloseGallery}
@@ -122,10 +117,9 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, title }) => {
             <div className="text-center">
               <span>{currentImageIndex + 1} / {images.length}</span>
             </div>
-            <div>{/* Spacer for centering */}</div>
+            <div></div>
           </div>
           
-          {/* Main image display */}
           <div className="flex-grow flex items-center justify-center relative">
             <button
               onClick={handlePrevImage}
@@ -150,7 +144,6 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, title }) => {
             </button>
           </div>
           
-          {/* Thumbnails at bottom */}
           <div className="h-24 overflow-x-auto">
             <div className="flex space-x-2 p-4">
               {images.map((image, index) => (

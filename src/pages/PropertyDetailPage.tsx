@@ -76,12 +76,9 @@ const PropertyDetailPage: React.FC = () => {
           </div>
         </div>
         
-        {/* Image Gallery */}
         <ImageGallery images={property.images} title={property.title} />
         
-        {/* Main Content */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Left Column - Property Info */}
           <div className="lg:col-span-2">
             <div className="border-b border-neutral-200 pb-6">
               <div className="flex justify-between">
@@ -106,7 +103,6 @@ const PropertyDetailPage: React.FC = () => {
               </div>
             </div>
             
-            {/* Features */}
             <div className="py-6 border-b border-neutral-200">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex">
@@ -147,7 +143,6 @@ const PropertyDetailPage: React.FC = () => {
               </div>
             </div>
             
-            {/* Description */}
             <div className="py-6 border-b border-neutral-200">
               <h2 className="text-xl font-semibold mb-4">About this place</h2>
               <p className="text-neutral-700 leading-relaxed">
@@ -155,7 +150,6 @@ const PropertyDetailPage: React.FC = () => {
               </p>
             </div>
             
-            {/* Amenities */}
             <div className="py-6 border-b border-neutral-200">
               <h2 className="text-xl font-semibold mb-4">What this place offers</h2>
               
@@ -193,7 +187,6 @@ const PropertyDetailPage: React.FC = () => {
               </div>
             </div>
             
-            {/* Reviews */}
             <div className="py-6">
               <div className="flex items-center mb-6">
                 <Star size={20} className="text-primary-500 mr-2" />
@@ -233,7 +226,6 @@ const PropertyDetailPage: React.FC = () => {
             </div>
           </div>
           
-          {/* Right Column - Booking Widget */}
           <div className="lg:col-span-1">
             <div className="sticky top-32">
               <BookingWidget

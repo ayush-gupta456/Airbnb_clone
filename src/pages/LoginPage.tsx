@@ -9,7 +9,6 @@ const LoginPage: React.FC = () => {
   const { user, login, error, clearError } = useAuth();
   const navigate = useNavigate();
 
-  // If user is already logged in, redirect to home
   useEffect(() => {
     if (user) {
       navigate('/');

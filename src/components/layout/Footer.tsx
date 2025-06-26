@@ -5,7 +5,6 @@ const Footer: React.FC = () => {
   return (
     <footer className="pt-8 pb-6 bg-white border-t border-neutral-200">
       <div className="container-custom">
-        {/* Main Footer Links */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <h3 className="mb-4 font-bold text-neutral-800">Support</h3>
@@ -52,7 +51,6 @@ const Footer: React.FC = () => {
           </div>
         </div>
         
-        {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between pt-6 mt-8 border-t border-neutral-200 md:flex-row">
           <div className="flex flex-col items-center space-y-2 md:flex-row md:space-y-0 md:space-x-4">
             <div className="text-sm text-neutral-600">

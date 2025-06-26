@@ -11,7 +11,6 @@ const RegisterPage: React.FC = () => {
   const { user, register, error, clearError } = useAuth();
   const navigate = useNavigate();
 
-  // If user is already logged in, redirect to home
   useEffect(() => {
     if (user) {
       navigate('/');
