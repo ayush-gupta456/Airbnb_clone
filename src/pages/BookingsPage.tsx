@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, CheckCircle, XCircle, ChevronRight } from 'lucide-react';
 
-// Mock data for bookings
 const mockBookings = [
   {
     id: '1',
@@ -68,7 +67,6 @@ const BookingsPage: React.FC = () => {
     <div className="container-custom py-12">
       <h1 className="text-2xl font-semibold mb-8">Your Bookings</h1>
       
-      {/* Tabs */}
       <div className="border-b border-neutral-200 mb-6">
         <div className="flex space-x-8">
           <button
@@ -104,7 +102,6 @@ const BookingsPage: React.FC = () => {
         </div>
       </div>
       
-      {/* Bookings List */}
       <div className="space-y-6">
         {getFilteredBookings().length === 0 ? (
           <div className="text-center py-12">
@@ -123,7 +120,6 @@ const BookingsPage: React.FC = () => {
           getFilteredBookings().map(booking => (
             <div key={booking.id} className="bg-white rounded-xl shadow-card overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-4">
-                {/* Image */}
                 <div className="md:col-span-1">
                   <div className="h-full">
                     <img
@@ -134,7 +130,6 @@ const BookingsPage: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* Details */}
                 <div className="md:col-span-3 p-6">
                   <div className="flex justify-between items-start">
                     <div>
@@ -146,7 +141,6 @@ const BookingsPage: React.FC = () => {
                       </p>
                     </div>
                     
-                    {/* Status badge */}
                     <div>
                       {activeTab === 'upcoming' && (
                         <span className="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">

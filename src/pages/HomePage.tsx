@@ -41,7 +41,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="pb-12">
-      {/* Hero Section */}
       <div className="relative h-[70vh] bg-gradient-to-b from-neutral-800 to-neutral-900 flex items-center justify-center text-white overflow-hidden">
         <div className="absolute inset-0">
           <img 
@@ -63,10 +62,8 @@ const HomePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Property Filters */}
       <PropertyFilters onFilterChange={handleFilterChange} />
 
-      {/* Featured Properties */}
       <div className="container-custom py-8">
         <h2 className="text-2xl font-semibold mb-6">Discover places to stay</h2>
         
@@ -93,7 +90,6 @@ const HomePage: React.FC = () => {
         )}
       </div>
       
-      {/* Travel Inspiration Section */}
       <div className="bg-neutral-50 py-16 mt-12">
         <div className="container-custom">
           <h2 className="text-2xl font-semibold mb-8">Travel Inspiration</h2>
@@ -158,7 +154,6 @@ const HomePage: React.FC = () => {
         </div>
       </div>
       
-      {/* Hosting CTA Section */}
       <div className="container-custom py-16">
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-primary-600 to-primary-500">
           <div className="absolute inset-0">
@@ -188,7 +183,6 @@ const HomePage: React.FC = () => {
         </div>
       </div>
       
-      {/* Featured Experiences */}
       <div className="container-custom py-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold">Popular Experiences</h2>

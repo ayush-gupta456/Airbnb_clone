@@ -28,7 +28,6 @@ const ProfilePage: React.FC = () => {
       <h1 className="text-2xl font-semibold mb-8">Account</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Sidebar */}
         <div className="col-span-1">
           <div className="bg-white shadow rounded-xl overflow-hidden">
             <div className="p-6 bg-primary-500 text-white">
@@ -103,7 +102,6 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
         
-        {/* Main Content */}
         <div className="col-span-1 md:col-span-3">
           <div className="bg-white shadow rounded-xl p-6">
             {activeTab === 'profile' && (

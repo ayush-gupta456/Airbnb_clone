@@ -1,6 +1,5 @@
 import { Property } from '../types/property';
 
-// Mock data for properties
 const mockProperties: Property[] = [
   {
     _id: '1',
@@ -468,17 +467,13 @@ const mockProperties: Property[] = [
   }
 ];
 
-// Get all properties
 export const getProperties = async (): Promise<Property[]> => {
-  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 800));
   
   return mockProperties;
 };
 
-// Get a single property by ID
 export const getPropertyById = async (id: string): Promise<Property> => {
-  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
   
   const property = mockProperties.find(property => property._id === id);
@@ -490,14 +485,12 @@ export const getPropertyById = async (id: string): Promise<Property> => {
   return property;
 };
 
-// Search properties
 export const searchProperties = async (
   location: string,
   checkIn?: string,
   checkOut?: string,
   guests?: number
 ): Promise<Property[]> => {
-  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
   let filteredProperties = [...mockProperties];
@@ -507,9 +500,6 @@ export const searchProperties = async (
       property.location.toLowerCase().includes(location.toLowerCase())
     );
   }
-  
-  // Additional filters for check-in/out dates and guest count would go here
-  // This is a simplified version
   
   return filteredProperties;
 };

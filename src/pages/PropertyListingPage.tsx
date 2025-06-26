@@ -13,7 +13,6 @@ const PropertyListingPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Get search parameters
   const locationParam = searchParams.get('location');
   const checkInParam = searchParams.get('checkIn');
   const checkOutParam = searchParams.get('checkOut');
@@ -26,7 +25,6 @@ const PropertyListingPage: React.FC = () => {
         const data = await getProperties();
         setProperties(data);
         
-        // Apply any search filters
         let filtered = [...data];
         
         if (locationParam) {
@@ -34,9 +32,6 @@ const PropertyListingPage: React.FC = () => {
             property.location.toLowerCase().includes(locationParam.toLowerCase())
           );
         }
-        
-        // You would also filter by dates and guests in a real app
-        // This is a simplified version
         
         setFilteredProperties(filtered);
         setLoading(false);
@@ -64,10 +59,8 @@ const PropertyListingPage: React.FC = () => {
 
   return (
     <div className="pb-16">
-      {/* Property Type Filters */}
       <PropertyFilters onFilterChange={handleFilterChange} />
       
-      {/* Main Content */}
       <div className="container-custom py-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">
@@ -86,13 +79,11 @@ const PropertyListingPage: React.FC = () => {
           </button>
         </div>
         
-        {/* Filter panel (hidden by default) */}
         {showFilters && (
           <div className="bg-white border border-neutral-200 rounded-xl p-6 mb-8 shadow-md">
             <h3 className="font-semibold text-lg mb-4">Filter Properties</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Price Range */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
                   Price Range
@@ -115,7 +106,6 @@ const PropertyListingPage: React.FC = () => {
                 </div>
               </div>
               
-              {/* Rooms */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
                   Rooms & Beds
@@ -142,7 +132,6 @@ const PropertyListingPage: React.FC = () => {
                 </div>
               </div>
               
-              {/* Property Type */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
                   Property Type
@@ -156,7 +145,6 @@ const PropertyListingPage: React.FC = () => {
                 </select>
               </div>
               
-              {/* Amenities */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
                   Amenities
@@ -192,7 +180,6 @@ const PropertyListingPage: React.FC = () => {
           </div>
         )}
         
-        {/* Search summary if filters applied */}
         {locationParam && (
           <div className="flex items-center mb-6 text-neutral-600">
             <MapPin size={18} className="mr-1" />
@@ -206,7 +193,6 @@ const PropertyListingPage: React.FC = () => {
           </div>
         )}
         
-        {/* Property Grid */}
         {loading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>

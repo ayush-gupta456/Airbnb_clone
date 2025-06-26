@@ -5,22 +5,18 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// MongoDB connection
 mongoose.connect('mongodb://localhost:27017/airbnbdata', { serverSelectionTimeoutMS: 10000 })
 .then(() => console.log('MongoDB Connected to airbnbdata'))
 .catch(err => console.log('MongoDB Connection Error:', err));
 
-// User Schema
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -38,17 +34,16 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 6 // Example: require a minimum password length
+    minlength: 6
   },
-  isHost: { // Assuming users can also be hosts
+  isHost: {
     type: Boolean,
     default: false
   }
 }, {
-  timestamps: true // Adds createdAt and updatedAt timestamps
+  timestamps: true
 });
 
-// Pre-save hook to hash password
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
@@ -62,14 +57,12 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Method to compare password
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
 const User = mongoose.model('User', userSchema);
 
-// Define Schema
 const dataSchema = new mongoose.Schema({
   title: String,
   description: String,
@@ -109,23 +102,20 @@ const dataSchema = new mongoose.Schema({
   isBooked: Boolean
 });
 
-// Create Model
 const Data = mongoose.model('data', dataSchema);
 
 import { protect } from './middleware/authMiddleware.js';
 
-// Routes
 app.get('/', (req, res) => {
   res.send('Airbnb Clone API is running');
 });
 
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, email: user.email, isHost: user.isHost }, process.env.JWT_SECRET, {
-    expiresIn: "30d", // Example: token expires in 30 days
+    expiresIn: "30d",
   });
 };
 
-// User Routes
 app.post('/api/users/register', async (req, res) => {
   const { name, email, password, isHost } = req.body;
 
@@ -139,7 +129,7 @@ app.post('/api/users/register', async (req, res) => {
       name,
       email,
       password,
-      isHost: isHost || false // Default isHost to false if not provided
+      isHost: isHost || false
     });
 
     await user.save();
@@ -196,7 +186,6 @@ app.post('/api/users/login', async (req, res) => {
   }
 });
 
-// Property Routes
 app.get('/api/properties', async (req, res) => {
   try {
     const properties = await Data.find();
@@ -218,7 +207,6 @@ app.get('/api/properties/:id', async (req, res) => {
   }
 });
 
-// Add new property
 app.post('/api/properties', protect, async (req, res) => {
   try {
     const newProperty = new Data(req.body);
@@ -229,7 +217,6 @@ app.post('/api/properties', protect, async (req, res) => {
   }
 });
 
-// Update property
 app.put('/api/properties/:id', protect, async (req, res) => {
   try {
     const updatedProperty = await Data.findByIdAndUpdate(
@@ -246,7 +233,6 @@ app.put('/api/properties/:id', protect, async (req, res) => {
   }
 });
 
-// Delete property
 app.delete('/api/properties/:id', protect, async (req, res) => {
   try {
     const deletedProperty = await Data.findByIdAndDelete(req.params.id);
@@ -259,10 +245,7 @@ app.delete('/api/properties/:id', protect, async (req, res) => {
   }
 });
 
-// Booking Routes
 app.post('/api/bookings', protect, (req, res) => {
-  // Implementation for creating a booking
-  // For the demo, we'll just send a successful response
   res.status(201).json({
     success: true,
     message: 'Booking created successfully',
@@ -280,7 +263,6 @@ app.post('/api/bookings', protect, (req, res) => {
   });
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

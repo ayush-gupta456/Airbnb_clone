@@ -13,14 +13,12 @@ const SearchBar: React.FC = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Build query params
     const params = new URLSearchParams();
     if (location) params.append('location', location);
     if (checkIn) params.append('checkIn', checkIn);
     if (checkOut) params.append('checkOut', checkOut);
     if (guests) params.append('guests', guests);
     
-    // Navigate to search results
     navigate(`/properties?${params.toString()}`);
   };
 
